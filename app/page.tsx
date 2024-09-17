@@ -21,7 +21,7 @@ export default function Home() {
   const { isSignInModalOpen, onClose } = useEmojiStore();
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center p-24">
+      <main className="flex min-h-screen flex-col items-center p-4">
         <h1 className="text-4xl font-bold mb-8">Emoji Maker</h1>
         <EmojiForm />
         <EmojiGrid />
@@ -30,9 +30,7 @@ export default function Home() {
         <div className="z-[999999] fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-4">Please sign in</h2>
-            <p className="mb-4">
-              You need to sign in to continue. 
-            </p>
+            <p className="mb-4">You need to sign in to continue.</p>
             <SignInButton mode="redirect">
               <Button className="mr-2">Sign in</Button>
             </SignInButton>
