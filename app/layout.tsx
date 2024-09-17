@@ -2,15 +2,15 @@
 
 import localFont from "next/font/local";
 import "./globals.css";
-import { ClerkProvider } from '@clerk/nextjs';
-import dynamic from 'next/dynamic';
-import { useUser } from '@clerk/nextjs';
-import { useEffect } from 'react';
-import { createOrGetUser } from '@/utils/user';
-import { metadata } from './metadata'; // Import metadata from the new file
+import { ClerkProvider } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
+import { useUser } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { createOrGetUser } from "@/utils/user";
+import { metadata } from "./metadata"; // Import metadata from the new file
 
 // Dynamically import the Header component with SSR disabled
-const Header = dynamic(() => import('@/components/ui/headers'), { ssr: false });
+const Header = dynamic(() => import("@/components/ui/headers"), { ssr: false });
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,12 +31,12 @@ function UserHandler({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoaded && user) {
       createOrGetUser(user.id)
-        .then(profile => {
-          console.log('User profile:', profile);
+        .then((profile) => {
+          console.log("User profile:", profile);
           // You can store the profile in a global state here if needed
         })
-        .catch(error => {
-          console.error('Error handling user:', error);
+        .catch((error) => {
+          console.error("Error handling user:", error);
         });
     }
   }, [isLoaded, user]);
@@ -52,11 +52,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <head>
-          <title>{metadata.title}</title>
-          <meta name="description" content={metadata.description} />
-          {/* Add other metadata fields as needed */}
-        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
