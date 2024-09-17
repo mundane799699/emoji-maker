@@ -5,23 +5,38 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function getAllEmojis() {
+export async function getAllEmojis(userId?: string) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("emojis")
-    .select("*")
+    .select(
+      `
+      *,
+      emoji_likes (user_id)
+    `
+    )
     .order("created_at", { ascending: false });
 
+  if (userId) {
+    query = query.eq("emoji_likes.user_id", userId);
+  }
+
+  const { data, error } = await query;
+  console.log("data = ", data);
+
   if (error) {
-    console.error("Error fetching emojis:", error);
+    console.error("获取表情符号时出错：", error);
     return [];
   }
 
-  return data;
+  return data.map((emoji) => ({
+    ...emoji,
+    isLiked: emoji.emoji_likes && emoji.emoji_likes.length > 0,
+  }));
 }
 
 // ... 现有代码 ...

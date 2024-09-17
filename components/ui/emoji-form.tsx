@@ -49,12 +49,12 @@ export function EmojiForm() {
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="输入表情符号的描述"
+          placeholder="Enter emoji prompt"
           disabled={isLoading}
           className="w-full rounded-md"
         />
         <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? "生成中..." : "生成表情"}
+          {isLoading ? "Generating..." : "Generate Emoji"}
         </Button>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -66,7 +66,7 @@ export function EmojiForm() {
             className="mx-auto mb-2 w-60 h-60 object-contain"
           />
           <p className="text-center text-sm text-gray-600">
-            描述: {generatedEmoji.prompt}
+            prompt: {generatedEmoji.prompt}
           </p>
         </div>
       )}

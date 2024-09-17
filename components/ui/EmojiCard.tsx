@@ -11,40 +11,44 @@ interface EmojiCardProps {
     image_url: string;
     prompt: string;
     likes_count: number;
+    isLiked: boolean;
   };
+  userId?: string;
 }
 
-export function EmojiCard({ emoji }: EmojiCardProps) {
+export function EmojiCard({ emoji, userId }: EmojiCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [likesCount, setLikesCount] = useState(emoji.likes_count);
-  const [isLiked, setIsLiked] = useState(false);
-  const { user, isLoaded } = useUser();
-
-  useEffect(() => {
-    async function checkLikeStatus() {
-      if (user) {
-        const { data } = await supabase
-          .from("emoji_likes")
-          .select("*")
-          .eq("user_id", user.id)
-          .eq("emoji_id", emoji.id)
-          .single();
-        setIsLiked(!!data);
-      }
-    }
-    checkLikeStatus();
-  }, [user, emoji.id]);
+  const [isLiked, setIsLiked] = useState(emoji.isLiked);
 
   const handleLike = async () => {
-    if (!user) {
-      alert("请先登录后再点赞");
+    if (!userId) {
+      alert("please login first");
       return;
     }
 
-    const result = await toggleLike(user.id, emoji.id);
+    const result = await toggleLike(userId, emoji.id);
     if (result) {
       setIsLiked(result.isLiked);
       setLikesCount(result.likesCount);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(emoji.image_url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = `emoji-${emoji.id}.png`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("download failed:", error);
+      alert("download failed, please try again later");
     }
   };
 
@@ -57,7 +61,10 @@ export function EmojiCard({ emoji }: EmojiCardProps) {
       <img src={emoji.image_url} alt={emoji.prompt} className="w-full h-auto" />
       {isHovered && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <button className="mr-2 p-2 bg-white rounded-full">
+          <button
+            className="mr-2 p-2 bg-white rounded-full"
+            onClick={handleDownload}
+          >
             <Download className="h-5 w-5 text-gray-700" />
           </button>
           <button className="p-2 bg-white rounded-full" onClick={handleLike}>

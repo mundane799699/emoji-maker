@@ -6,6 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Download, Heart } from "lucide-react";
 import { useEmojiStore } from "@/store/emojiStore";
 import { EmojiCard } from "./EmojiCard";
+import { useUser } from "@clerk/nextjs";
 
 interface Emoji {
   id: number;
@@ -17,6 +18,7 @@ interface Emoji {
 
 export function EmojiGrid() {
   const { emojis, setEmojis } = useEmojiStore();
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
     // const supabase = createClient(
@@ -25,7 +27,11 @@ export function EmojiGrid() {
     // );
 
     async function fetchEmojis() {
-      const fetchedEmojis = await getAllEmojis();
+      if (!isLoaded) {
+        return;
+      }
+      console.log("userId = ", user.id);
+      const fetchedEmojis = await getAllEmojis(user.id);
       setEmojis(fetchedEmojis);
     }
 
@@ -46,12 +52,12 @@ export function EmojiGrid() {
     // return () => {
     //   subscription.unsubscribe();
     // };
-  }, []);
+  }, [isLoaded]);
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
       {emojis.map((emoji) => (
-        <EmojiCard key={emoji.id} emoji={emoji} />
+        <EmojiCard key={emoji.id} emoji={emoji} userId={user.id} />
       ))}
     </div>
   );

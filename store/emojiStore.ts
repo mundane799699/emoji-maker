@@ -6,6 +6,7 @@ interface Emoji {
   prompt: string;
   likes_count: number;
   creator_user_id: string;
+  isLiked: boolean;
 }
 
 interface EmojiStore {
