@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Heart, Download } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { supabase, toggleLike } from "@/utils/supabase";
+import { useEmojiStore } from "@/store/emojiStore";
 
 interface EmojiCardProps {
   emoji: {
@@ -20,10 +21,11 @@ export function EmojiCard({ emoji, userId }: EmojiCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [likesCount, setLikesCount] = useState(emoji.likes_count);
   const [isLiked, setIsLiked] = useState(emoji.isLiked);
+  const { onOpen } = useEmojiStore();
 
   const handleLike = async () => {
     if (!userId) {
-      alert("please login first");
+      onOpen();
       return;
     }
 
@@ -35,6 +37,10 @@ export function EmojiCard({ emoji, userId }: EmojiCardProps) {
   };
 
   const handleDownload = async () => {
+    if (!userId) {
+      onOpen();
+      return;
+    }
     try {
       const response = await fetch(emoji.image_url);
       const blob = await response.blob();

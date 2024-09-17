@@ -26,7 +26,6 @@ export async function getAllEmojis(userId?: string) {
   }
 
   const { data, error } = await query;
-  console.log("data = ", data);
 
   if (error) {
     console.error("获取表情符号时出错：", error);

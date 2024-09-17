@@ -30,8 +30,8 @@ export function EmojiGrid() {
       if (!isLoaded) {
         return;
       }
-      console.log("userId = ", user.id);
-      const fetchedEmojis = await getAllEmojis(user.id);
+      // console.log("userId = ", user.id);
+      const fetchedEmojis = await getAllEmojis(user?.id);
       setEmojis(fetchedEmojis);
     }
 
@@ -57,7 +57,7 @@ export function EmojiGrid() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
       {emojis.map((emoji) => (
-        <EmojiCard key={emoji.id} emoji={emoji} userId={user.id} />
+        <EmojiCard key={emoji.id} emoji={emoji} userId={user?.id} />
       ))}
     </div>
   );

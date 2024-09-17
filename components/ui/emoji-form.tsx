@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./button";
 import { Input } from "./input";
 import { useEmojiStore } from "@/store/emojiStore";
+import { useUser, useSignIn, SignInButton } from "@clerk/nextjs";
 
 export function EmojiForm() {
   const [prompt, setPrompt] = useState("");
@@ -13,10 +14,17 @@ export function EmojiForm() {
     prompt: string;
   } | null>(null);
 
-  const { addEmoji } = useEmojiStore();
+  const { addEmoji, onOpen } = useEmojiStore();
+  const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) {
+      onOpen();
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
