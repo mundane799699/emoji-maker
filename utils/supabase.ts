@@ -22,6 +22,8 @@ export async function getAllEmojis(userId?: string) {
     .order("created_at", { ascending: false });
 
   if (userId) {
+    // 只选择那些被指定用户（userId）点赞过的表情符号
+    // emoji.emoji_likes最多只有一条记录
     query = query.eq("emoji_likes.user_id", userId);
   }
 
@@ -34,7 +36,7 @@ export async function getAllEmojis(userId?: string) {
 
   return data.map((emoji) => ({
     ...emoji,
-    isLiked: emoji.emoji_likes && emoji.emoji_likes.length > 0,
+    isLiked: userId && emoji.emoji_likes && emoji.emoji_likes.length > 0,
   }));
 }
 

@@ -64,24 +64,30 @@ export function EmojiCard({ emoji, userId }: EmojiCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <img src={emoji.image_url} alt={emoji.prompt} className="w-full h-auto" />
-      {isHovered && (
-        <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <button
-            className="mr-2 p-2 bg-white rounded-full"
-            onClick={handleDownload}
-          >
-            <Download className="h-5 w-5 text-gray-700" />
-          </button>
-          <button className="p-2 bg-white rounded-full" onClick={handleLike}>
-            <Heart
-              className={`h-5 w-5 ${
-                isLiked ? "text-red-500 fill-current" : "text-gray-500"
-              }`}
-            />
-          </button>
-        </div>
-      )}
+      <div className="relative">
+        <img
+          src={emoji.image_url}
+          alt={emoji.prompt}
+          className="w-full h-auto"
+        />
+        {isHovered && (
+          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+            <button
+              className="mr-2 p-2 bg-white rounded-full"
+              onClick={handleDownload}
+            >
+              <Download className="h-5 w-5 text-gray-700" />
+            </button>
+            <button className="p-2 bg-white rounded-full" onClick={handleLike}>
+              <Heart
+                className={`h-5 w-5 ${
+                  isLiked ? "text-red-500 fill-current" : "text-gray-500"
+                }`}
+              />
+            </button>
+          </div>
+        )}
+      </div>
       <div className="mt-2 flex justify-between items-center">
         <p className="text-sm truncate flex-1">{emoji.prompt}</p>
         <div className="flex items-center ml-2">
